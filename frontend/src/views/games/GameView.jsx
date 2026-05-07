@@ -199,7 +199,7 @@ const GameView = () => {
 
           <CCardBody>
             {/* actions */}
-            <div className="d-flex align-items-center gap-2 mb-3">
+            <div className="d-flex flex-wrap align-items-center gap-2 mb-3">
               <CButton
                 color="secondary"
                 variant="outline"
@@ -210,7 +210,11 @@ const GameView = () => {
                 Search
               </CButton>
 
-              <CButton color="primary" onClick={() => setAddVisible(true)}>
+              <CButton
+                color="primary"
+                onClick={() => setAddVisible(true)}
+                className="text-trancate"
+              >
                 <CIcon icon={cilPlus} className="me-2" />
                 Add Player
               </CButton>
