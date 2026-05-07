@@ -104,8 +104,9 @@ const Games = () => {
                             color="secondary"
                             variant="outline"
                             onClick={() => navigate(`/games/${game.slug}/edit`)}
+                            className="d-flex align-items-center gap-2"
                           >
-                            <CIcon icon={cilPencil} size="sm" className="me-1" />
+                            <CIcon icon={cilPencil} size="sm" />
                             Edit
                           </CButton>
 

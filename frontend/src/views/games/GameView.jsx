@@ -23,7 +23,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import api from '../../lib/api'
 import { formatDateTime } from '../../lib/format'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilPlus, cilSearch } from '@coreui/icons'
+import { cilHistory, cilLockLocked, cilPlus, cilSearch } from '@coreui/icons'
 
 import AddPlayerModal from './AddPlayerModal'
 import SearchPlayerModal from './SearchPlayerModal'
@@ -201,7 +201,6 @@ const GameView = () => {
             {/* actions */}
             <div className="d-flex flex-wrap align-items-center gap-2 mb-3">
               <CButton
-                color="secondary"
                 variant="outline"
                 className="d-flex align-items-center gap-2"
                 onClick={() => setSearchVisible(true)}
@@ -221,14 +220,13 @@ const GameView = () => {
 
               {/* Login button */}
               <CButton
-                color="dark"
                 variant="outline"
-                className="d-flex align-items-center justify-content-center"
-                style={{ width: 38, height: 38 }}
+                className="d-flex align-items-center gap-2"
                 onClick={() => loginMutation.mutate()}
                 disabled={loginMutation.isPending}
               >
-                {loginMutation.isPending ? <CSpinner size="sm" /> : <CIcon icon={cilLockLocked} />}
+                {loginMutation.isPending ? <CSpinner size="sm" /> : <CIcon icon={cilHistory} />}
+                Refresh
               </CButton>
             </div>
 
