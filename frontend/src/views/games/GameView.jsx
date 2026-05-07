@@ -27,6 +27,8 @@ import { cilPlus, cilSearch } from '@coreui/icons'
 
 import AddPlayerModal from './AddPlayerModal'
 import SearchPlayerModal from './SearchPlayerModal'
+import RechargeModal from './RechargeModal'
+import WithdrawModal from './WithdrawModal'
 
 const GameView = () => {
   const { slug } = useParams()
@@ -36,6 +38,9 @@ const GameView = () => {
   // modals
   const [searchVisible, setSearchVisible] = useState(false)
   const [addVisible, setAddVisible] = useState(false)
+  const [rechargeVisible, setRechargeVisible] = useState(false)
+  const [withdrawVisible, setWithdrawVisible] = useState(false)
+  const [selectedPlayer, setSelectedPlayer] = useState(null)
 
   // filters
   const [filters, setFilters] = useState({
@@ -50,6 +55,40 @@ const GameView = () => {
 
     onSuccess: () => {
       setAddVisible(false)
+
+      queryClient.invalidateQueries({
+        queryKey: ['game-players', slug],
+      })
+    },
+
+    onError: (err) => {
+      console.error(err)
+    },
+  })
+
+  // recharge mutation
+  const rechargeMutation = useMutation({
+    mutationFn: (formData) => api.post(`/admin/games/${slug}/player/recharge`, formData),
+
+    onSuccess: () => {
+      setRechargeVisible(false)
+
+      queryClient.invalidateQueries({
+        queryKey: ['game-players', slug],
+      })
+    },
+
+    onError: (err) => {
+      console.error(err)
+    },
+  })
+
+  // withdraw mutation
+  const withdrawMutation = useMutation({
+    mutationFn: (formData) => api.post(`/admin/games/${slug}/player/withdraw`, formData),
+
+    onSuccess: () => {
+      setWithdrawVisible(false)
 
       queryClient.invalidateQueries({
         queryKey: ['game-players', slug],
@@ -170,11 +209,12 @@ const GameView = () => {
                   <CTableHeaderCell>Account</CTableHeaderCell>
                   <CTableHeaderCell>Nickname</CTableHeaderCell>
                   <CTableHeaderCell>Score</CTableHeaderCell>
-                  <CTableHeaderCell>Login Count</CTableHeaderCell>
+                  <CTableHeaderCell>L. Count</CTableHeaderCell>
                   <CTableHeaderCell>Last Login</CTableHeaderCell>
-                  <CTableHeaderCell>IP</CTableHeaderCell>
+                  {/* <CTableHeaderCell>IP</CTableHeaderCell> */}
                   <CTableHeaderCell>Status</CTableHeaderCell>
                   <CTableHeaderCell>Added</CTableHeaderCell>
+                  <CTableHeaderCell>Actions</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
 
@@ -194,7 +234,7 @@ const GameView = () => {
                       <CTableDataCell>{p.score}</CTableDataCell>
                       <CTableDataCell>{p.LoginCount}</CTableDataCell>
                       <CTableDataCell>{p.lasttime}</CTableDataCell>
-                      <CTableDataCell>{p.loginip}</CTableDataCell>
+                      {/* <CTableDataCell>{p.loginip}</CTableDataCell> */}
 
                       <CTableDataCell>
                         <CBadge color={p.account_using === 1 ? 'success' : 'secondary'}>
@@ -204,6 +244,32 @@ const GameView = () => {
 
                       <CTableDataCell className="text-nowrap">
                         {formatDateTime(p.AddDate)}
+                      </CTableDataCell>
+
+                      <CTableDataCell className="text-nowrap">
+                        <div className="d-flex gap-2">
+                          <CButton
+                            color="info"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedPlayer(p.id)
+                              setRechargeVisible(true)
+                            }}
+                          >
+                            Recharge
+                          </CButton>
+
+                          <CButton
+                            color="warning"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedPlayer(p.id)
+                              setWithdrawVisible(true)
+                            }}
+                          >
+                            Withdraw
+                          </CButton>
+                        </div>
                       </CTableDataCell>
                     </CTableRow>
                   ))
@@ -269,6 +335,22 @@ const GameView = () => {
         onClose={() => setAddVisible(false)}
         loading={addPlayerMutation.isPending}
         onSubmit={(formData) => addPlayerMutation.mutate(formData)}
+      />
+
+      <RechargeModal
+        visible={rechargeVisible}
+        onClose={() => setRechargeVisible(false)}
+        playerId={selectedPlayer}
+        loading={rechargeMutation.isPending}
+        onSubmit={(data) => rechargeMutation.mutate(data)}
+      />
+
+      <WithdrawModal
+        visible={withdrawVisible}
+        onClose={() => setWithdrawVisible(false)}
+        playerId={selectedPlayer}
+        loading={withdrawMutation.isPending}
+        onSubmit={(data) => withdrawMutation.mutate(data)}
       />
     </CRow>
   )

@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { Redis } from 'ioredis';
 import { randomBytes } from 'crypto';
@@ -127,13 +127,23 @@ export class MafiaService {
     return Number(data?.data?.balance ?? 0);
   }
 
-  async recharge(id: string, balance: string, remark = 'test') {
+  async recharge(id: string, balance: number, remark?: string) {
     const token = await this.getAgentToken();
+
+    if (!id) {
+      throw new BadRequestException('Player ID is required');
+    }
+
+    if (balance === undefined || balance === null) {
+      throw new BadRequestException('Balance is required');
+    }
+
+    const finalRemark = remark || 'Recharge';
 
     const formData = new URLSearchParams();
     formData.append('id', id);
-    formData.append('balance', balance);
-    formData.append('remark', remark);
+    formData.append('balance', balance.toString());
+    formData.append('remark', finalRemark);
 
     const { data } = await this.http.axiosRef.post(
       `${this.baseUrl}/player/playerRecharge`,
@@ -145,16 +155,31 @@ export class MafiaService {
       },
     );
 
-    return data;
+    return {
+      id,
+      balance,
+      remark: finalRemark,
+      apiResponse: data,
+    };
   }
 
-  async withdraw(id: string, balance: string, remark = 'test') {
+  async withdraw(id: string, balance: number, remark?: string) {
     const token = await this.getAgentToken();
+
+    if (!id) {
+      throw new Error('Player ID is required');
+    }
+
+    if (balance === undefined || balance === null) {
+      throw new Error('Balance is required');
+    }
+
+    const finalRemark = remark || 'Withdraw';
 
     const formData = new URLSearchParams();
     formData.append('id', id);
-    formData.append('balance', balance);
-    formData.append('remark', remark);
+    formData.append('balance', balance.toString());
+    formData.append('remark', finalRemark);
 
     const { data } = await this.http.axiosRef.post(
       `${this.baseUrl}/player/playerWithdraw`,
@@ -166,6 +191,11 @@ export class MafiaService {
       },
     );
 
-    return data;
+    return {
+      id,
+      balance,
+      remark: finalRemark,
+      apiResponse: data,
+    };
   }
 }

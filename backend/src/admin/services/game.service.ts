@@ -71,4 +71,24 @@ export class GameService {
 
     return await service.addPlayer(username, nickname, password, money);
   }
+
+  async recharge(slug: string, id: string, balance: number, remark?: string) {
+    const service = this.serviceMap[slug];
+
+    if (!service) {
+      throw new BadRequestException(`Unknown game slug: ${slug}`);
+    }
+
+    return await service.recharge(id, balance, remark);
+  }
+
+  async withdraw(slug: string, id: string, balance: number, remark?: string) {
+    const service = this.serviceMap[slug];
+
+    if (!service) {
+      throw new BadRequestException(`Unknown game slug: ${slug}`);
+    }
+
+    return await service.withdraw(id, balance, remark);
+  }
 }

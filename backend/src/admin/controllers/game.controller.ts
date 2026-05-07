@@ -44,4 +44,30 @@ export class GameController {
       body.money,
     );
   }
+
+  @Post(':slug/player/recharge')
+  recharge(
+    @Param('slug') slug: string,
+    @Body()
+    body: {
+      id: string;
+      balance: number;
+      remark?: string;
+    },
+  ) {
+    return this.gameService.recharge(slug, body.id, body.balance, body.remark);
+  }
+
+  @Post(':slug/player/withdraw')
+  withdraw(
+    @Param('slug') slug: string,
+    @Body()
+    body: {
+      id: string;
+      balance: number;
+      remark?: string;
+    },
+  ) {
+    return this.gameService.withdraw(slug, body.id, body.balance, body.remark);
+  }
 }
