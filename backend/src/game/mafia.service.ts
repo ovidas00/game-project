@@ -6,6 +6,7 @@ import { randomBytes } from 'crypto';
 @Injectable()
 export class MafiaService {
   private readonly baseUrl = 'https://agentserver.mafia77777.com/api';
+  private readonly cacheKey = 'mafia77777:token';
 
   constructor(
     private readonly http: HttpService,
@@ -13,12 +14,7 @@ export class MafiaService {
     private readonly redis: Redis,
   ) {}
 
-  async getAgentToken(): Promise<string> {
-    const cacheKey = 'mafia77777:token';
-
-    const cachedToken = await this.redis.get(cacheKey);
-    if (cachedToken) return cachedToken;
-
+  async login(): Promise<string> {
     const formData = new URLSearchParams();
     formData.append('username', 'Legend121');
     formData.append('password', 'Hero@#1233');
@@ -30,9 +26,20 @@ export class MafiaService {
 
     const token = data?.data?.token;
 
-    if (token) {
-      await this.redis.set(cacheKey, token, 'EX', 18000);
+    if (!token) {
+      throw new BadRequestException('Login failed: token not received');
     }
+
+    await this.redis.set(this.cacheKey, token, 'EX', 18000);
+
+    return token;
+  }
+
+  async getAgentToken(): Promise<string> {
+    const cachedToken = await this.redis.get(this.cacheKey);
+    if (cachedToken) return cachedToken;
+
+    const token = await this.login();
 
     return token;
   }

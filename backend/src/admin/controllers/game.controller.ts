@@ -70,4 +70,9 @@ export class GameController {
   ) {
     return this.gameService.withdraw(slug, body.id, body.balance, body.remark);
   }
+
+  @Post(':slug/login')
+  login(@Param('slug') slug: string) {
+    return this.gameService.login(slug);
+  }
 }

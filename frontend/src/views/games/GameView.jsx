@@ -23,7 +23,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import api from '../../lib/api'
 import { formatDateTime } from '../../lib/format'
 import CIcon from '@coreui/icons-react'
-import { cilPlus, cilSearch } from '@coreui/icons'
+import { cilLockLocked, cilPlus, cilSearch } from '@coreui/icons'
 
 import AddPlayerModal from './AddPlayerModal'
 import SearchPlayerModal from './SearchPlayerModal'
@@ -90,6 +90,21 @@ const GameView = () => {
     onSuccess: () => {
       setWithdrawVisible(false)
 
+      queryClient.invalidateQueries({
+        queryKey: ['game-players', slug],
+      })
+    },
+
+    onError: (err) => {
+      console.error(err)
+    },
+  })
+
+  // login mutation
+  const loginMutation = useMutation({
+    mutationFn: () => api.post(`/admin/games/${slug}/login`),
+
+    onSuccess: (res) => {
       queryClient.invalidateQueries({
         queryKey: ['game-players', slug],
       })
@@ -198,6 +213,18 @@ const GameView = () => {
               <CButton color="primary" onClick={() => setAddVisible(true)}>
                 <CIcon icon={cilPlus} className="me-2" />
                 Add Player
+              </CButton>
+
+              {/* Login button */}
+              <CButton
+                color="dark"
+                variant="outline"
+                className="d-flex align-items-center justify-content-center"
+                style={{ width: 38, height: 38 }}
+                onClick={() => loginMutation.mutate()}
+                disabled={loginMutation.isPending}
+              >
+                {loginMutation.isPending ? <CSpinner size="sm" /> : <CIcon icon={cilLockLocked} />}
               </CButton>
             </div>
 

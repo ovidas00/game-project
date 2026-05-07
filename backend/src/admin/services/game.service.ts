@@ -91,4 +91,14 @@ export class GameService {
 
     return await service.withdraw(id, balance, remark);
   }
+
+  async login(slug: string) {
+    const service = this.serviceMap[slug];
+
+    if (!service) {
+      throw new BadRequestException(`Unknown game slug: ${slug}`);
+    }
+
+    return await service.login();
+  }
 }
