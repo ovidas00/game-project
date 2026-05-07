@@ -18,7 +18,7 @@ import React from 'react'
 // Dashboard
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Games = React.lazy(() => import('./views/games/Games'))
-// const GameView = React.lazy(() => import('./views/games/GameView'))
+const GameView = React.lazy(() => import('./views/games/GameView'))
 // const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 // const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 
