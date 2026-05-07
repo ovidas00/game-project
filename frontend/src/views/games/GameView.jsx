@@ -226,7 +226,7 @@ const GameView = () => {
                 disabled={loginMutation.isPending}
               >
                 {loginMutation.isPending ? <CSpinner size="sm" /> : <CIcon icon={cilHistory} />}
-                Refresh
+                Re-Login
               </CButton>
             </div>
 
