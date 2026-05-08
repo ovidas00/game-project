@@ -18,7 +18,7 @@ import {
 } from '@coreui/react'
 import { useMemo, useState, useEffect } from 'react'
 
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import api from '../../lib/api'
 import { formatDateTime } from '../../lib/format'
@@ -34,6 +34,7 @@ const GameView = () => {
   const { slug } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   // modals
   const [searchVisible, setSearchVisible] = useState(false)
