@@ -39,6 +39,7 @@ const GameView = () => {
   const [addVisible, setAddVisible] = useState(false)
   const [balanceVisible, setBalanceVisible] = useState(false)
   const [selectedPlayer, setSelectedPlayer] = useState(null)
+  const [playerInfo, setPlayerInfo] = useState(null)
 
   // filters
   const [filters, setFilters] = useState({
@@ -248,6 +249,7 @@ const GameView = () => {
                         <span
                           onClick={() => {
                             setSelectedPlayer(p.id)
+                            setPlayerInfo(p)
                             setBalanceVisible(true)
                           }}
                           style={{
@@ -348,6 +350,7 @@ const GameView = () => {
         visible={balanceVisible}
         onClose={() => setBalanceVisible(false)}
         onSubmit={(formData) => balanceMutation.mutate(formData)}
+        playerInfo={playerInfo}
       />
     </CRow>
   )

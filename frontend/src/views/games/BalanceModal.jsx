@@ -12,7 +12,7 @@ import {
 } from '@coreui/react'
 import { useState, useEffect } from 'react'
 
-const BalanceModal = ({ visible, onClose, onSubmit, loading, playerId }) => {
+const BalanceModal = ({ visible, onClose, onSubmit, loading, playerId, playerInfo }) => {
   const [type, setType] = useState('recharge')
 
   const [form, setForm] = useState({
@@ -56,6 +56,18 @@ const BalanceModal = ({ visible, onClose, onSubmit, loading, playerId }) => {
 
       <CForm onSubmit={handleSubmit}>
         <CModalBody>
+          <div className="d-flex justify-content-between align-items-center p-2 mb-3 border rounded">
+            <div>
+              <div className="text-muted small">Account</div>
+              <div className="fw-semibold">{playerInfo?.Account}</div>
+            </div>
+
+            <div className="text-end">
+              <div className="text-muted small">Score</div>
+              <div className="fw-semibold">{playerInfo?.score ?? 0}</div>
+            </div>
+          </div>
+
           {/* Radio Switch */}
           <div className="mb-3 d-flex gap-4">
             <CFormCheck
