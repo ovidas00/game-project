@@ -55,10 +55,7 @@ const GameView = () => {
 
     onSuccess: () => {
       setAddVisible(false)
-
-      queryClient.invalidateQueries({
-        queryKey: ['game-players', slug],
-      })
+      toast.success('Player queue added')
     },
 
     onError: (err) => {

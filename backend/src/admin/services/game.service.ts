@@ -17,6 +17,8 @@ export class GameService {
     private readonly mafiaService: MafiaService,
     @InjectQueue('recharge-queue') private readonly rechargeQueue: Queue,
     @InjectQueue('withdraw-queue') private readonly withdrawQueue: Queue,
+    @InjectQueue('create-account-queue')
+    private readonly createAccountQueue: Queue,
   ) {
     this.serviceMap = {
       gameroom: this.gameroomService,
@@ -73,7 +75,18 @@ export class GameService {
       throw new BadRequestException(`Unknown game slug: ${slug}`);
     }
 
-    return await service.addPlayer(username, nickname, password, money);
+    const job = await this.createAccountQueue.add('create-player-job', {
+      slug,
+      username,
+      nickname,
+      password,
+      money,
+    });
+
+    return {
+      message: 'Player creation queued',
+      jobId: job.id,
+    };
   }
 
   async recharge(slug: string, id: string, balance: number, remark?: string) {

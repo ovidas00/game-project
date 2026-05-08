@@ -1,28 +1,8 @@
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-  CBadge,
-  CButton,
-  CAvatar,
-  CButtonGroup,
-  CSpinner,
-} from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow, CSpinner, CButton } from '@coreui/react'
 
 import { useQuery } from '@tanstack/react-query'
 import api from '../../lib/api'
-import { formatDateTime } from '../../lib/format'
 import { useNavigate } from 'react-router-dom'
-import CIcon from '@coreui/icons-react'
-import { cilPencil } from '@coreui/icons'
 
 const Games = () => {
   const navigate = useNavigate()
@@ -41,92 +21,48 @@ const Games = () => {
           </CCardHeader>
 
           <CCardBody>
-            <CTable striped hover responsive align="middle">
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell>#</CTableHeaderCell>
-                  <CTableHeaderCell>Game</CTableHeaderCell>
-                  <CTableHeaderCell>Category</CTableHeaderCell>
-                  <CTableHeaderCell>Slug</CTableHeaderCell>
-                  <CTableHeaderCell>Badge</CTableHeaderCell>
-                  <CTableHeaderCell>Featured</CTableHeaderCell>
-                  <CTableHeaderCell>Created At</CTableHeaderCell>
-                  <CTableHeaderCell>Actions</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
+            {isFetching && (
+              <div className="text-center py-4">
+                <CSpinner color="primary" />
+              </div>
+            )}
 
-              <CTableBody>
-                {isFetching && (
-                  <CTableRow>
-                    <CTableDataCell colSpan={8} className="text-center py-4">
-                      <CSpinner color="primary" />
-                    </CTableDataCell>
-                  </CTableRow>
-                )}
+            {!isFetching && (
+              <CRow xs={{ cols: 2 }} md={{ cols: 4 }} lg={{ cols: 6 }} className="g-3">
+                {games.map((game) => (
+                  <CCol key={game.id}>
+                    <CCard
+                      onClick={() => navigate(`/games/${game.slug}`)}
+                      className="overflow-hidden"
+                      style={{
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {/* IMAGE */}
+                      <img
+                        src={game.image}
+                        alt={game.name}
+                        style={{
+                          width: '100%',
+                          height: '120px',
+                          objectFit: 'cover',
+                          display: 'block',
+                        }}
+                      />
 
-                {!isFetching &&
-                  games.map((game, index) => (
-                    <CTableRow key={game.id}>
-                      <CTableDataCell>{index + 1}</CTableDataCell>
+                      {/* TEXT */}
+                      <div className="p-2 text-center">
+                        <div className="fw-semibold text-truncate">{game.name}</div>
+                      </div>
+                    </CCard>
+                  </CCol>
+                ))}
+              </CRow>
+            )}
 
-                      <CTableDataCell>
-                        <div className="d-flex align-items-center gap-3">
-                          <img
-                            src={game.image}
-                            alt={game.name}
-                            style={{ width: '40px', height: '40px', objectFit: 'cover' }}
-                            className="rounded bg-light"
-                          />
-                          <div className="fw-semibold">{game.name}</div>
-                        </div>
-                      </CTableDataCell>
-
-                      <CTableDataCell>{game.category}</CTableDataCell>
-                      <CTableDataCell>{game.slug}</CTableDataCell>
-
-                      <CTableDataCell>
-                        {game.badge ? <CBadge color="info">{game.badge}</CBadge> : '-'}
-                      </CTableDataCell>
-
-                      <CTableDataCell>
-                        <CBadge color={game.isFeatured ? 'success' : 'secondary'}>
-                          {game.isFeatured ? 'Yes' : 'No'}
-                        </CBadge>
-                      </CTableDataCell>
-
-                      <CTableDataCell className="text-nowrap">
-                        {formatDateTime(game.createdAt)}
-                      </CTableDataCell>
-
-                      <CTableDataCell>
-                        <CButtonGroup size="sm">
-                          <CButton
-                            color="secondary"
-                            variant="outline"
-                            onClick={() => navigate(`/games/${game.slug}/edit`)}
-                            className="d-flex align-items-center gap-2"
-                          >
-                            <CIcon icon={cilPencil} size="sm" />
-                            Edit
-                          </CButton>
-
-                          <CButton color="primary" onClick={() => navigate(`/games/${game.slug}`)}>
-                            View
-                          </CButton>
-                        </CButtonGroup>
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))}
-
-                {!isFetching && games.length === 0 && (
-                  <CTableRow>
-                    <CTableDataCell colSpan={8} className="text-center text-muted">
-                      No games found
-                    </CTableDataCell>
-                  </CTableRow>
-                )}
-              </CTableBody>
-            </CTable>
+            {!isFetching && games.length === 0 && (
+              <div className="text-center text-muted py-4">No games found</div>
+            )}
           </CCardBody>
         </CCard>
       </CCol>

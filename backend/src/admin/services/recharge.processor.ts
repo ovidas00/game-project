@@ -19,10 +19,6 @@ export class RechargeProcessor extends WorkerHost {
 
     const service = this.gameService['serviceMap'][slug];
 
-    if (!service) {
-      throw new Error(`Unknown game slug: ${slug}`);
-    }
-
     try {
       const result = await service.recharge(id, balance, remark);
 

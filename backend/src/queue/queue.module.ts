@@ -16,6 +16,14 @@ import { ConfigService } from '@nestjs/config';
     }),
 
     BullModule.registerQueue({
+      name: 'create-account-queue',
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: 50,
+      },
+    }),
+
+    BullModule.registerQueue({
       name: 'recharge-queue',
       defaultJobOptions: {
         removeOnComplete: true,

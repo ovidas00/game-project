@@ -5,6 +5,7 @@ import { GameroomService } from 'src/game/gameroom.service';
 import { MafiaService } from 'src/game/mafia.service';
 import { RechargeProcessor } from './services/recharge.processor';
 import { WithdrawProcessor } from './services/withdraw.processor';
+import { CreatePlayerProcessor } from './services/create-player.processor';
 
 @Module({
   controllers: [GameController],
@@ -12,6 +13,7 @@ import { WithdrawProcessor } from './services/withdraw.processor';
     GameService,
     GameroomService,
     MafiaService,
+    CreatePlayerProcessor,
     RechargeProcessor,
     WithdrawProcessor,
   ],
