@@ -20,7 +20,8 @@
  */
 
 import React from 'react'
-import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
+import { AppContent, AppSidebar, AppHeader } from '../components/index'
+import { Toaster } from 'react-hot-toast'
 
 /**
  * DefaultLayout functional component
@@ -46,6 +47,8 @@ const DefaultLayout = () => {
         </div>
         {/* <AppFooter /> */}
       </div>
+
+      <Toaster position="bottom-center" />
     </div>
   )
 }

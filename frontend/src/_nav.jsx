@@ -10,24 +10,9 @@
  * @module _nav
  */
 
-import React from 'react'
 import CIcon from '@coreui/icons-react'
-import {
-  cilBell,
-  cilCalculator,
-  cilChartPie,
-  cilCursor,
-  cilDescription,
-  cilDrop,
-  cilExternalLink,
-  cilGamepad,
-  cilNotes,
-  cilPencil,
-  cilPuzzle,
-  cilSpeedometer,
-  cilStar,
-} from '@coreui/icons'
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+import { cilGamepad, cilSpeedometer } from '@coreui/icons'
+import { CNavItem } from '@coreui/react'
 
 /**
  * Navigation menu structure array

@@ -1,8 +1,10 @@
+import { InjectQueue } from '@nestjs/bullmq';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GameroomService } from 'src/game/gameroom.service';
 import { MafiaService } from 'src/game/mafia.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Queue } from 'bullmq';
 
 @Injectable()
 export class GameService {
@@ -13,6 +15,8 @@ export class GameService {
     private readonly configService: ConfigService,
     private readonly gameroomService: GameroomService,
     private readonly mafiaService: MafiaService,
+    @InjectQueue('recharge-queue') private readonly rechargeQueue: Queue,
+    @InjectQueue('withdraw-queue') private readonly withdrawQueue: Queue,
   ) {
     this.serviceMap = {
       gameroom: this.gameroomService,
@@ -79,7 +83,19 @@ export class GameService {
       throw new BadRequestException(`Unknown game slug: ${slug}`);
     }
 
-    return await service.recharge(id, balance, remark);
+    // Add to queue
+    const job = await this.rechargeQueue.add('recharge-job', {
+      slug,
+      id,
+      balance,
+      remark,
+    });
+
+    // instant response
+    return {
+      message: 'Recharge request queued',
+      jobId: job.id,
+    };
   }
 
   async withdraw(slug: string, id: string, balance: number, remark?: string) {
@@ -89,7 +105,17 @@ export class GameService {
       throw new BadRequestException(`Unknown game slug: ${slug}`);
     }
 
-    return await service.withdraw(id, balance, remark);
+    const job = await this.withdrawQueue.add('withdraw-job', {
+      slug,
+      id,
+      balance,
+      remark,
+    });
+
+    return {
+      message: 'Withdraw request queued',
+      jobId: job.id,
+    };
   }
 
   async login(slug: string) {

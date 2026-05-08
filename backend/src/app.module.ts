@@ -8,6 +8,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { HttpModule } from '@nestjs/axios';
 import { AdminModule } from './admin/admin.module';
 import { RedisModule } from './redis/redis.module';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { RedisModule } from './redis/redis.module';
     ServeStaticModule.forRoot({ rootPath: join(process.cwd(), 'public') }),
     PrismaModule,
     RedisModule,
+    QueueModule,
     HttpModule.register({ global: true }),
     AdminModule,
   ],

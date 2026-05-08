@@ -28,6 +28,7 @@ import { cilHistory, cilPlus, cilSearch } from '@coreui/icons'
 import AddPlayerModal from './AddPlayerModal'
 import SearchPlayerModal from './SearchPlayerModal'
 import BalanceModal from './BalanceModal'
+import toast from 'react-hot-toast'
 
 const GameView = () => {
   const { slug } = useParams()
@@ -77,10 +78,7 @@ const GameView = () => {
 
     onSuccess: () => {
       setBalanceVisible(false)
-
-      queryClient.invalidateQueries({
-        queryKey: ['game-players', slug],
-      })
+      toast.success('Balance queue added')
     },
 
     onError: (err) => {
