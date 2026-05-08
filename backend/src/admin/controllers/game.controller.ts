@@ -71,6 +71,24 @@ export class GameController {
     return this.gameService.withdraw(slug, body.id, body.balance, body.remark);
   }
 
+  @Post(':slug/player/reset-password')
+  resetPassword(
+    @Param('slug') slug: string,
+    @Body()
+    body: {
+      id: string;
+      password: string;
+      password_confirmation: string;
+    },
+  ) {
+    return this.gameService.resetPassword(
+      slug,
+      body.id,
+      body.password,
+      body.password_confirmation,
+    );
+  }
+
   @Post(':slug/login')
   login(@Param('slug') slug: string) {
     return this.gameService.login(slug);

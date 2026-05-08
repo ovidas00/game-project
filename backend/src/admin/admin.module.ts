@@ -6,6 +6,7 @@ import { MafiaService } from 'src/game/mafia.service';
 import { RechargeProcessor } from './services/recharge.processor';
 import { WithdrawProcessor } from './services/withdraw.processor';
 import { CreatePlayerProcessor } from './services/create-player.processor';
+import { ResetPasswordProcessor } from './services/reset-password.processor';
 
 @Module({
   controllers: [GameController],
@@ -16,6 +17,7 @@ import { CreatePlayerProcessor } from './services/create-player.processor';
     CreatePlayerProcessor,
     RechargeProcessor,
     WithdrawProcessor,
+    ResetPasswordProcessor,
   ],
 })
 export class AdminModule {}

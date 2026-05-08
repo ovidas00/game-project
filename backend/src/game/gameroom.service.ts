@@ -205,4 +205,45 @@ export class GameroomService {
       apiResponse: data,
     };
   }
+
+  async reset(id: string, password: string, passwordConfirmation: string) {
+    const token = await this.getAgentToken();
+
+    if (!id) {
+      throw new BadRequestException('Player ID is required');
+    }
+
+    if (!password) {
+      throw new BadRequestException('Password is required');
+    }
+
+    if (!passwordConfirmation) {
+      throw new BadRequestException('Password confirmation is required');
+    }
+
+    if (password !== passwordConfirmation) {
+      throw new BadRequestException('Passwords do not match');
+    }
+
+    const formData = new URLSearchParams();
+    formData.append('id', id);
+    formData.append('password', password);
+    formData.append('password_confirmation', passwordConfirmation);
+
+    const { data } = await this.http.axiosRef.post(
+      `${this.baseUrl}/player/reset`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return {
+      id,
+      password,
+      apiResponse: data,
+    };
+  }
 }

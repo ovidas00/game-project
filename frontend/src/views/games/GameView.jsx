@@ -29,6 +29,7 @@ import AddPlayerModal from './AddPlayerModal'
 import SearchPlayerModal from './SearchPlayerModal'
 import BalanceModal from './BalanceModal'
 import toast from 'react-hot-toast'
+import ResetPasswordModal from './ResetPasswordModal'
 
 const GameView = () => {
   const { slug } = useParams()
@@ -40,6 +41,7 @@ const GameView = () => {
   const [searchVisible, setSearchVisible] = useState(false)
   const [addVisible, setAddVisible] = useState(false)
   const [balanceVisible, setBalanceVisible] = useState(false)
+  const [resetVisible, setResetVisible] = useState(false)
   const [selectedPlayer, setSelectedPlayer] = useState(null)
   const [playerInfo, setPlayerInfo] = useState(null)
 
@@ -93,6 +95,29 @@ const GameView = () => {
 
     onError: (err) => {
       console.error(err)
+    },
+  })
+
+  // reset password
+  const resetPasswordMutation = useMutation({
+    mutationFn: (formData) => {
+      return api.post(`/admin/games/${slug}/player/reset-password`, formData)
+    },
+
+    onSuccess: () => {
+      setResetVisible(false)
+      toast.success('Password reset request queued')
+
+      if (window.history.length > 1) {
+        navigate(-1)
+      } else {
+        navigate('/games')
+      }
+    },
+
+    onError: (err) => {
+      console.error(err)
+      toast.error(err?.response?.data?.message || 'Something went wrong')
     },
   })
 
@@ -236,9 +261,10 @@ const GameView = () => {
                   <CTableHeaderCell>Score</CTableHeaderCell>
                   <CTableHeaderCell>L. Count</CTableHeaderCell>
                   <CTableHeaderCell>Last Login</CTableHeaderCell>
-                  <CTableHeaderCell>IP</CTableHeaderCell>
+                  {/* <CTableHeaderCell>IP</CTableHeaderCell> */}
                   <CTableHeaderCell>Status</CTableHeaderCell>
                   <CTableHeaderCell>Added</CTableHeaderCell>
+                  <CTableHeaderCell>Actions</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
 
@@ -274,8 +300,8 @@ const GameView = () => {
                       <CTableDataCell>{p.nickname}</CTableDataCell>
                       <CTableDataCell>{p.score}</CTableDataCell>
                       <CTableDataCell>{p.LoginCount}</CTableDataCell>
-                      <CTableDataCell>{p.lasttime}</CTableDataCell>
-                      <CTableDataCell>{p.loginip}</CTableDataCell>
+                      <CTableDataCell>{formatDateTime(p.lasttime)}</CTableDataCell>
+                      {/* <CTableDataCell>{p.loginip}</CTableDataCell> */}
 
                       <CTableDataCell>
                         <CBadge color={p.account_using === 1 ? 'success' : 'secondary'}>
@@ -285,6 +311,21 @@ const GameView = () => {
 
                       <CTableDataCell className="text-nowrap">
                         {formatDateTime(p.AddDate)}
+                      </CTableDataCell>
+
+                      <CTableDataCell>
+                        <CButton
+                          size="sm"
+                          color="danger"
+                          variant="outline"
+                          onClick={() => {
+                            setSelectedPlayer(p.id)
+                            setPlayerInfo(p)
+                            setResetVisible(true)
+                          }}
+                        >
+                          Reset Password
+                        </CButton>
                       </CTableDataCell>
                     </CTableRow>
                   ))
@@ -358,6 +399,15 @@ const GameView = () => {
         visible={balanceVisible}
         onClose={() => setBalanceVisible(false)}
         onSubmit={(formData) => balanceMutation.mutate(formData)}
+        playerInfo={playerInfo}
+      />
+
+      <ResetPasswordModal
+        playerId={selectedPlayer}
+        loading={resetPasswordMutation.isPending}
+        visible={resetVisible}
+        onClose={() => setResetVisible(false)}
+        onSubmit={(formData) => resetPasswordMutation.mutate(formData)}
         playerInfo={playerInfo}
       />
     </CRow>

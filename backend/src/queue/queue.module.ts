@@ -38,6 +38,14 @@ import { ConfigService } from '@nestjs/config';
         removeOnFail: 50,
       },
     }),
+
+    BullModule.registerQueue({
+      name: 'reset-password-queue',
+      defaultJobOptions: {
+        removeOnComplete: true,
+        removeOnFail: 50,
+      },
+    }),
   ],
   exports: [BullModule],
 })

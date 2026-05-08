@@ -19,6 +19,8 @@ export class GameService {
     @InjectQueue('withdraw-queue') private readonly withdrawQueue: Queue,
     @InjectQueue('create-account-queue')
     private readonly createAccountQueue: Queue,
+    @InjectQueue('reset-password-queue')
+    private readonly resetQueue: Queue,
   ) {
     this.serviceMap = {
       gameroom: this.gameroomService,
@@ -127,6 +129,31 @@ export class GameService {
 
     return {
       message: 'Withdraw request queued',
+      jobId: job.id,
+    };
+  }
+
+  async resetPassword(
+    slug: string,
+    id: string,
+    password: string,
+    passwordConfirmation: string,
+  ) {
+    const service = this.serviceMap[slug];
+
+    if (!service) {
+      throw new BadRequestException(`Unknown game slug: ${slug}`);
+    }
+
+    const job = await this.resetQueue.add('reset-password-job', {
+      slug,
+      id,
+      password,
+      passwordConfirmation,
+    });
+
+    return {
+      message: 'Reset password request queued',
       jobId: job.id,
     };
   }
