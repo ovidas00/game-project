@@ -23,12 +23,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import api from '../../lib/api'
 import { formatDateTime } from '../../lib/format'
 import CIcon from '@coreui/icons-react'
-import { cilHistory, cilLockLocked, cilPlus, cilSearch } from '@coreui/icons'
+import { cilHistory, cilPlus, cilSearch } from '@coreui/icons'
 
 import AddPlayerModal from './AddPlayerModal'
 import SearchPlayerModal from './SearchPlayerModal'
-import RechargeModal from './RechargeModal'
-import WithdrawModal from './WithdrawModal'
+import BalanceModal from './BalanceModal'
 
 const GameView = () => {
   const { slug } = useParams()
@@ -38,8 +37,7 @@ const GameView = () => {
   // modals
   const [searchVisible, setSearchVisible] = useState(false)
   const [addVisible, setAddVisible] = useState(false)
-  const [rechargeVisible, setRechargeVisible] = useState(false)
-  const [withdrawVisible, setWithdrawVisible] = useState(false)
+  const [balanceVisible, setBalanceVisible] = useState(false)
   const [selectedPlayer, setSelectedPlayer] = useState(null)
 
   // filters
@@ -66,29 +64,18 @@ const GameView = () => {
     },
   })
 
-  // recharge mutation
-  const rechargeMutation = useMutation({
-    mutationFn: (formData) => api.post(`/admin/games/${slug}/player/recharge`, formData),
+  const balanceMutation = useMutation({
+    mutationFn: ({ type, ...formData }) => {
+      const url =
+        type === 'recharge'
+          ? `/admin/games/${slug}/player/recharge`
+          : `/admin/games/${slug}/player/withdraw`
 
-    onSuccess: () => {
-      setRechargeVisible(false)
-
-      queryClient.invalidateQueries({
-        queryKey: ['game-players', slug],
-      })
+      return api.post(url, formData)
     },
 
-    onError: (err) => {
-      console.error(err)
-    },
-  })
-
-  // withdraw mutation
-  const withdrawMutation = useMutation({
-    mutationFn: (formData) => api.post(`/admin/games/${slug}/player/withdraw`, formData),
-
     onSuccess: () => {
-      setWithdrawVisible(false)
+      setBalanceVisible(false)
 
       queryClient.invalidateQueries({
         queryKey: ['game-players', slug],
@@ -240,10 +227,9 @@ const GameView = () => {
                   <CTableHeaderCell>Score</CTableHeaderCell>
                   <CTableHeaderCell>L. Count</CTableHeaderCell>
                   <CTableHeaderCell>Last Login</CTableHeaderCell>
-                  {/* <CTableHeaderCell>IP</CTableHeaderCell> */}
+                  <CTableHeaderCell>IP</CTableHeaderCell>
                   <CTableHeaderCell>Status</CTableHeaderCell>
                   <CTableHeaderCell>Added</CTableHeaderCell>
-                  <CTableHeaderCell>Actions</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
 
@@ -258,12 +244,28 @@ const GameView = () => {
                   players.map((p) => (
                     <CTableRow key={p.id}>
                       <CTableDataCell>{p.id}</CTableDataCell>
-                      <CTableDataCell>{p.Account}</CTableDataCell>
+                      <CTableDataCell>
+                        <span
+                          onClick={() => {
+                            setSelectedPlayer(p.id)
+                            setBalanceVisible(true)
+                          }}
+                          style={{
+                            cursor: 'pointer',
+                            color: '#0d6efd',
+                            textDecoration: 'none',
+                          }}
+                          onMouseEnter={(e) => (e.target.style.textDecoration = 'underline')}
+                          onMouseLeave={(e) => (e.target.style.textDecoration = 'none')}
+                        >
+                          {p.Account}
+                        </span>
+                      </CTableDataCell>
                       <CTableDataCell>{p.nickname}</CTableDataCell>
                       <CTableDataCell>{p.score}</CTableDataCell>
                       <CTableDataCell>{p.LoginCount}</CTableDataCell>
                       <CTableDataCell>{p.lasttime}</CTableDataCell>
-                      {/* <CTableDataCell>{p.loginip}</CTableDataCell> */}
+                      <CTableDataCell>{p.loginip}</CTableDataCell>
 
                       <CTableDataCell>
                         <CBadge color={p.account_using === 1 ? 'success' : 'secondary'}>
@@ -273,32 +275,6 @@ const GameView = () => {
 
                       <CTableDataCell className="text-nowrap">
                         {formatDateTime(p.AddDate)}
-                      </CTableDataCell>
-
-                      <CTableDataCell className="text-nowrap">
-                        <div className="d-flex gap-2">
-                          <CButton
-                            color="info"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedPlayer(p.id)
-                              setRechargeVisible(true)
-                            }}
-                          >
-                            Recharge
-                          </CButton>
-
-                          <CButton
-                            color="warning"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedPlayer(p.id)
-                              setWithdrawVisible(true)
-                            }}
-                          >
-                            Withdraw
-                          </CButton>
-                        </div>
                       </CTableDataCell>
                     </CTableRow>
                   ))
@@ -366,20 +342,12 @@ const GameView = () => {
         onSubmit={(formData) => addPlayerMutation.mutate(formData)}
       />
 
-      <RechargeModal
-        visible={rechargeVisible}
-        onClose={() => setRechargeVisible(false)}
+      <BalanceModal
         playerId={selectedPlayer}
-        loading={rechargeMutation.isPending}
-        onSubmit={(data) => rechargeMutation.mutate(data)}
-      />
-
-      <WithdrawModal
-        visible={withdrawVisible}
-        onClose={() => setWithdrawVisible(false)}
-        playerId={selectedPlayer}
-        loading={withdrawMutation.isPending}
-        onSubmit={(data) => withdrawMutation.mutate(data)}
+        loading={balanceMutation.isPending}
+        visible={balanceVisible}
+        onClose={() => setBalanceVisible(false)}
+        onSubmit={(formData) => balanceMutation.mutate(formData)}
       />
     </CRow>
   )
