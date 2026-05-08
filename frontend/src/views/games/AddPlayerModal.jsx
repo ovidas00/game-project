@@ -33,7 +33,13 @@ const AddPlayerModal = ({ visible, onClose, onSubmit, loading }) => {
       return
     }
 
-    onSubmit(form)
+    const { username, ...rest } = form
+
+    onSubmit({
+      ...rest,
+      username,
+      nickname: username,
+    })
   }
 
   return (
@@ -48,15 +54,6 @@ const AddPlayerModal = ({ visible, onClose, onSubmit, loading }) => {
             label="Username"
             name="username"
             value={form.username}
-            onChange={handleChange}
-            required
-            className="mb-3"
-          />
-
-          <CFormInput
-            label="Nickname"
-            name="nickname"
-            value={form.nickname}
             onChange={handleChange}
             required
             className="mb-3"
