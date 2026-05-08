@@ -56,6 +56,12 @@ const GameView = () => {
     onSuccess: () => {
       setAddVisible(false)
       toast.success('Player queue added')
+
+      if (window.history.length > 1) {
+        navigate(-1)
+      } else {
+        navigate('/games')
+      }
     },
 
     onError: (err) => {
@@ -76,6 +82,12 @@ const GameView = () => {
     onSuccess: () => {
       setBalanceVisible(false)
       toast.success('Balance queue added')
+
+      if (window.history.length > 1) {
+        navigate(-1)
+      } else {
+        navigate('/games')
+      }
     },
 
     onError: (err) => {
