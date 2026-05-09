@@ -7,6 +7,7 @@ import { RechargeProcessor } from './services/recharge.processor';
 import { WithdrawProcessor } from './services/withdraw.processor';
 import { CreatePlayerProcessor } from './services/create-player.processor';
 import { ResetPasswordProcessor } from './services/reset-password.processor';
+import { MrallinoneService } from 'src/game/mrallinone.service';
 
 @Module({
   controllers: [GameController],
@@ -14,6 +15,7 @@ import { ResetPasswordProcessor } from './services/reset-password.processor';
     GameService,
     GameroomService,
     MafiaService,
+    MrallinoneService,
     CreatePlayerProcessor,
     RechargeProcessor,
     WithdrawProcessor,
