@@ -300,7 +300,9 @@ const GameView = () => {
                       <CTableDataCell>{p.nickname}</CTableDataCell>
                       <CTableDataCell>{p.score}</CTableDataCell>
                       <CTableDataCell>{p.LoginCount}</CTableDataCell>
-                      <CTableDataCell>{formatDateTime(p.lasttime)}</CTableDataCell>
+                      <CTableDataCell className="text-nowrap">
+                        {formatDateTime(p.lasttime)}
+                      </CTableDataCell>
                       {/* <CTableDataCell>{p.loginip}</CTableDataCell> */}
 
                       <CTableDataCell>
