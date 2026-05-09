@@ -5,8 +5,7 @@ import { randomBytes } from 'crypto';
 
 @Injectable()
 export class MrallinoneService {
-  private readonly baseUrl =
-    'https://agentserver.mrallinone777.com/api/agent/login';
+  private readonly baseUrl = 'https://agentserver.mrallinone777.com/api';
   private readonly cacheKey = 'mrallinone777:token';
 
   constructor(
