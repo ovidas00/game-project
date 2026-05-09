@@ -20,6 +20,14 @@ async function main() {
       badge: null,
       isFeatured: true,
     },
+    {
+      name: 'Mrallinone',
+      category: 'Casino',
+      slug: 'mrallinone',
+      image: '/assets/mrallinone.png',
+      badge: null,
+      isFeatured: true,
+    },
   ];
 
   for (const game of games) {
