@@ -9,6 +9,7 @@ import { CreatePlayerProcessor } from './services/create-player.processor';
 import { ResetPasswordProcessor } from './services/reset-password.processor';
 import { MrallinoneService } from 'src/game/mrallinone.service';
 import { CashfrenzyService } from 'src/game/cashfrenzy.service';
+import { CashmachineService } from 'src/game/cashmachine.service';
 
 @Module({
   controllers: [GameController],
@@ -18,6 +19,7 @@ import { CashfrenzyService } from 'src/game/cashfrenzy.service';
     MafiaService,
     MrallinoneService,
     CashfrenzyService,
+    CashmachineService,
     CreatePlayerProcessor,
     RechargeProcessor,
     WithdrawProcessor,

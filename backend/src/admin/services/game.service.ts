@@ -7,6 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Queue } from 'bullmq';
 import { MrallinoneService } from 'src/game/mrallinone.service';
 import { CashfrenzyService } from 'src/game/cashfrenzy.service';
+import { CashmachineService } from 'src/game/cashmachine.service';
 
 @Injectable()
 export class GameService {
@@ -19,6 +20,7 @@ export class GameService {
     private readonly mafiaService: MafiaService,
     private readonly mrallinoneService: MrallinoneService,
     private readonly cashfrenzyService: CashfrenzyService,
+    private readonly cashmachineService: CashmachineService,
     @InjectQueue('recharge-queue') private readonly rechargeQueue: Queue,
     @InjectQueue('withdraw-queue') private readonly withdrawQueue: Queue,
     @InjectQueue('create-account-queue')
@@ -31,6 +33,7 @@ export class GameService {
       mafia: this.mafiaService,
       mrallinone: this.mrallinoneService,
       cashfrenzy: this.cashfrenzyService,
+      cashmachine: this.cashmachineService,
     };
   }
 

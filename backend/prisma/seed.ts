@@ -36,6 +36,14 @@ async function main() {
       badge: null,
       isFeatured: true,
     },
+    {
+      name: 'Cash Machine',
+      category: 'Casino',
+      slug: 'cashmachine',
+      image: '/assets/cashmachine.png',
+      badge: null,
+      isFeatured: true,
+    },
   ];
 
   for (const game of games) {
