@@ -28,6 +28,14 @@ async function main() {
       badge: null,
       isFeatured: true,
     },
+    {
+      name: 'Cash Frenzy',
+      category: 'Casino',
+      slug: 'cashfrenzy',
+      image: '/assets/cashfrenzy.png',
+      badge: null,
+      isFeatured: true,
+    },
   ];
 
   for (const game of games) {
