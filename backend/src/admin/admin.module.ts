@@ -8,6 +8,7 @@ import { WithdrawProcessor } from './services/withdraw.processor';
 import { CreatePlayerProcessor } from './services/create-player.processor';
 import { ResetPasswordProcessor } from './services/reset-password.processor';
 import { MrallinoneService } from 'src/game/mrallinone.service';
+import { CashfrenzyService } from 'src/game/cashfrenzy.service';
 
 @Module({
   controllers: [GameController],
@@ -16,6 +17,7 @@ import { MrallinoneService } from 'src/game/mrallinone.service';
     GameroomService,
     MafiaService,
     MrallinoneService,
+    CashfrenzyService,
     CreatePlayerProcessor,
     RechargeProcessor,
     WithdrawProcessor,
