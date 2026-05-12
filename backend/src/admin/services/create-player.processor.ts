@@ -28,12 +28,19 @@ export class CreatePlayerProcessor extends WorkerHost {
     const finalPassword = password || randomBytes(6).toString('hex');
 
     try {
-      const result = await service.addPlayer(
-        finalUsername,
-        finalNickname,
-        finalPassword,
-        money,
-      );
+      let result: any;
+      if (slug === 'orionstars') {
+        result = await service.registerUser(finalUsername, finalPassword);
+      } else {
+        result = await service.addPlayer(
+          finalUsername,
+          finalNickname,
+          finalPassword,
+          money,
+        );
+      }
+
+      console.log(result);
 
       this.logger.log(`Player created: ${finalUsername}`);
 

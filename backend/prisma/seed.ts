@@ -44,6 +44,14 @@ async function main() {
       badge: null,
       isFeatured: true,
     },
+    {
+      name: 'Orion Stars',
+      category: 'Casino',
+      slug: 'orionstars',
+      image: '/assets/orionstars.png',
+      badge: null,
+      isFeatured: true,
+    },
   ];
 
   for (const game of games) {

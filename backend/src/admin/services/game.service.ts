@@ -8,6 +8,7 @@ import { Queue } from 'bullmq';
 import { MrallinoneService } from 'src/game/mrallinone.service';
 import { CashfrenzyService } from 'src/game/cashfrenzy.service';
 import { CashmachineService } from 'src/game/cashmachine.service';
+import { OrionstarsService } from 'src/game/orionstars.service';
 
 @Injectable()
 export class GameService {
@@ -21,6 +22,7 @@ export class GameService {
     private readonly mrallinoneService: MrallinoneService,
     private readonly cashfrenzyService: CashfrenzyService,
     private readonly cashmachineService: CashmachineService,
+    private readonly orionstarsService: OrionstarsService,
     @InjectQueue('recharge-queue') private readonly rechargeQueue: Queue,
     @InjectQueue('withdraw-queue') private readonly withdrawQueue: Queue,
     @InjectQueue('create-account-queue')
@@ -34,6 +36,7 @@ export class GameService {
       mrallinone: this.mrallinoneService,
       cashfrenzy: this.cashfrenzyService,
       cashmachine: this.cashmachineService,
+      orionstars: this.orionstarsService,
     };
   }
 

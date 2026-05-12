@@ -10,6 +10,7 @@ import { ResetPasswordProcessor } from './services/reset-password.processor';
 import { MrallinoneService } from 'src/game/mrallinone.service';
 import { CashfrenzyService } from 'src/game/cashfrenzy.service';
 import { CashmachineService } from 'src/game/cashmachine.service';
+import { OrionstarsService } from 'src/game/orionstars.service';
 
 @Module({
   controllers: [GameController],
@@ -20,6 +21,7 @@ import { CashmachineService } from 'src/game/cashmachine.service';
     MrallinoneService,
     CashfrenzyService,
     CashmachineService,
+    OrionstarsService,
     CreatePlayerProcessor,
     RechargeProcessor,
     WithdrawProcessor,
